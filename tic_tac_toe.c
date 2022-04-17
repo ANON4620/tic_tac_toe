@@ -16,6 +16,7 @@ int main()
     int check_draw();
     
     initscr();
+    noecho();
     curs_set(0);
     srand(time(NULL));
     set_up_board();
@@ -56,6 +57,7 @@ int main()
     }
 
     addstr("[Press any key to quit]");
+    refresh();
     getch();
     endwin();
 
@@ -79,6 +81,8 @@ void set_up_board()
     addstr("     |     |     \n");
     addstr("  7  |  8  |  9  \n");
     addstr("     |     |     \n\n");
+
+    refresh();
 }
 
 void draw()
@@ -94,18 +98,15 @@ void draw()
     addstr("     |     |     \n");
     printw("  %c  |  %c  |  %c  \n", board[2][0], board[2][1], board[2][2]);
     addstr("     |     |     \n\n");
+
+    refresh();
 }
 
 void player()
 {
-    int move; // to store player's move
-    int y, x;
+    int move;
 
     input:
-    getyx(stdscr, y, x);
-    move(y, 0); // ncurses function to move the cursor
-    clrtoeol();
-
     move = getch() - '0';
     switch(move)
     {
