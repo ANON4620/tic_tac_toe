@@ -95,7 +95,7 @@ void player()
     move(y, 0); // ncurses function to move the cursor
     clrtoeol();
 
-    move = getch() - 48;
+    move = getch() - '0';
     switch(move)
     {
         case 1:
