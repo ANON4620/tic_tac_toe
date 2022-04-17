@@ -3,6 +3,7 @@
 #include <time.h>
 
 char board[3][3];
+char cur_player;
 int moves_left = 9;
 
 int main()
@@ -14,9 +15,8 @@ int main()
     int check_win();
     int check_draw();
     
-    char cur_player;
-    
     initscr();
+    curs_set(0);
     srand(time(NULL));
     set_up_board();
     draw();
@@ -30,12 +30,12 @@ int main()
 	draw();
         if(check_win())
         {
-            printw("%c wins!", cur_player);
+            printw("%c wins!\n\n", cur_player);
             break;
         }
         if(check_draw())
         {
-            addstr("Draw!");
+            addstr("Draw!\n\n");
             break;
         }
         
@@ -46,16 +46,17 @@ int main()
 	draw();
         if(check_win())
         {
-            printw("%c wins!", cur_player);
+            printw("%c wins!\n\n", cur_player);
             break;
         }
         if(check_draw())
         {
-            addstr("Draw!");
+            addstr("Draw!\n\n");
             break;
         }
     }
 
+    addstr("[Press any key to quit]");
     getch();
     endwin();
 
@@ -81,87 +82,94 @@ void draw()
     addstr("-----------------\n");
     addstr("     |     |     \n");
     printw("  %c  |  %c  |  %c  \n", board[2][0], board[2][1], board[2][2]);
-    addstr("     |     |     \n");
-    addch('\n');
+    addstr("     |     |     \n\n");
 }
 
 void player()
 {
-    int move;
-    
+    int move; // to store player's move
+    int y, x;
+
     input:
+    getyx(stdscr, y, x);
+    move(y, 0); // ncurses function to move the cursor
+    clrtoeol();
+
     move = getch() - 48;
     switch(move)
     {
         case 1:
         if(board[0][0] == ' ')
-            board[0][0] = 'X';
+            board[0][0] = cur_player;
         else
             goto input;
         break;
             
         case 2:
         if(board[0][1] == ' ')
-            board[0][1] = 'X';
+            board[0][1] = cur_player;
         else
             goto input;
         break;
             
         case 3:
         if(board[0][2] == ' ')
-            board[0][2] = 'X';
+            board[0][2] = cur_player;
         else
             goto input;
         break;
             
         case 4:
         if(board[1][0] == ' ')
-            board[1][0] = 'X';
+            board[1][0] = cur_player;
         else
             goto input;
         break;
             
         case 5:
         if(board[1][1] == ' ')
-            board[1][1] = 'X';
+            board[1][1] = cur_player;
         else
             goto input;
         break;
             
         case 6:
         if(board[1][2] == ' ')
-            board[1][2] = 'X';
+            board[1][2] = cur_player;
         else 
             goto input;
         break;
             
         case 7:
         if(board[2][0] == ' ')
-            board[2][0] = 'X';
+            board[2][0] = cur_player;
         else
             goto input;
         break;
             
         case 8:
         if(board[2][1] == ' ')
-            board[2][1] = 'X';
+            board[2][1] = cur_player;
         else
             goto input;
         break;
             
         case 9:
         if(board[2][2] == ' ')
-            board[2][2] = 'X';
+            board[2][2] = cur_player;
         else
             goto input;
         break;
+
+	default:
+	goto input;
     }
     --moves_left;
 }
 
 void computer()
 {
-    char row[moves_left], column[moves_left];
+    char row[moves_left], col[moves_left];
     int k = 0, random;
             
     for(int i = 0; i < 3; i++)
@@ -171,13 +179,13 @@ void computer()
             if(board[i][j] == ' ')
             {
                 row[k] = i;
-                column[k] = j;
+                col[k] = j;
                 ++k;
             }
         }
     }
     random = rand() % moves_left;
-    board[row[random]][column[random]] = 'O';
+    board[row[random]][col[random]] = cur_player;
     --moves_left;
 }
 
