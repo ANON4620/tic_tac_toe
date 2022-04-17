@@ -19,7 +19,6 @@ int main()
     curs_set(0);
     srand(time(NULL));
     set_up_board();
-    draw();
     
     while(1)
     {
@@ -68,6 +67,18 @@ void set_up_board()
     for(int i = 0; i < 3; i++)
         for(int j = 0; j < 3; j++)
             board[i][j] = ' ';
+
+    addstr("     |     |     \n");
+    addstr("  1  |  2  |  3  \n");
+    addstr("     |     |     \n");
+    addstr("-----------------\n");
+    addstr("     |     |     \tPlayer - X\n");
+    addstr("  4  |  5  |  6  \tComputer - O\n");
+    addstr("     |     |     \n");
+    addstr("-----------------\n");
+    addstr("     |     |     \n");
+    addstr("  7  |  8  |  9  \n");
+    addstr("     |     |     \n\n");
 }
 
 void draw()
@@ -76,8 +87,8 @@ void draw()
     printw("  %c  |  %c  |  %c  \n", board[0][0], board[0][1], board[0][2]);
     addstr("     |     |     \n");
     addstr("-----------------\n");
-    addstr("     |     |     \n");
-    printw("  %c  |  %c  |  %c  \n", board[1][0], board[1][1], board[1][2]);
+    addstr("     |     |     \tPlayer - X\n");
+    printw("  %c  |  %c  |  %c  \tComputer - O\n", board[1][0], board[1][1], board[1][2]);
     addstr("     |     |     \n");
     addstr("-----------------\n");
     addstr("     |     |     \n");
