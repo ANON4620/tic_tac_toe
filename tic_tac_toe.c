@@ -111,7 +111,6 @@ void player()
     	move = getch() - '1';
     	row = move / 3;
     	col = move % 3;
-	// Credit for the above three lines goes to reddit user u/tea-drinker
 
     } while(board[row][col] != ' ');
 
