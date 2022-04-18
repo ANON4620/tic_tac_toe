@@ -104,78 +104,18 @@ void draw()
 
 void player()
 {
-    int move;
+    int move, row, col;
 
-    input:
-    move = getch() - '0';
-    switch(move)
+    do
     {
-        case 1:
-        if(board[0][0] == ' ')
-            board[0][0] = cur_player;
-        else
-            goto input;
-        break;
-            
-        case 2:
-        if(board[0][1] == ' ')
-            board[0][1] = cur_player;
-        else
-            goto input;
-        break;
-            
-        case 3:
-        if(board[0][2] == ' ')
-            board[0][2] = cur_player;
-        else
-            goto input;
-        break;
-            
-        case 4:
-        if(board[1][0] == ' ')
-            board[1][0] = cur_player;
-        else
-            goto input;
-        break;
-            
-        case 5:
-        if(board[1][1] == ' ')
-            board[1][1] = cur_player;
-        else
-            goto input;
-        break;
-            
-        case 6:
-        if(board[1][2] == ' ')
-            board[1][2] = cur_player;
-        else 
-            goto input;
-        break;
-            
-        case 7:
-        if(board[2][0] == ' ')
-            board[2][0] = cur_player;
-        else
-            goto input;
-        break;
-            
-        case 8:
-        if(board[2][1] == ' ')
-            board[2][1] = cur_player;
-        else
-            goto input;
-        break;
-            
-        case 9:
-        if(board[2][2] == ' ')
-            board[2][2] = cur_player;
-        else
-            goto input;
-        break;
+    	move = getch() - '1';
+    	row = move / 3;
+    	col = move % 3;
+	// Credit for the above three lines goes to reddit user u/tea-drinker
 
-	default:
-	goto input;
-    }
+    } while(board[row][col] != ' ');
+
+    board[row][col] = cur_player;
     --moves_left;
 }
 
