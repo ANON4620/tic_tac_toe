@@ -2,23 +2,23 @@
 #include <stdlib.h>
 #include <time.h>
 
+void clear_board();
+void draw();
+void player();
+void computer();
+int check_win();
+int check_draw();
+
 char board[3][3] = {
 	{'1', '2', '3'},
 	{'4', '5', '6'},
 	{'7', '8', '9'}
 };
 char cur_player = 'X';
-int moves_left = 9;
+int moves_left = 9, won = 0;
 
 int main()
 {
-    void clear_board();
-    void draw();
-    void player();
-    void computer();
-    int check_win();
-    int check_draw();
-   
     char next_player;
 
     initscr();
@@ -44,7 +44,7 @@ int main()
 	clear();
 	draw();
 
-        if(check_win())
+        if(won || check_win())
         {
             printw("%c wins!\n\n", cur_player);
             break;
@@ -112,7 +112,8 @@ void computer()
 {
     char row[moves_left], col[moves_left];
     int k = 0, random;
-            
+
+    // Find all possible moves
     for(int i = 0; i < 3; i++)
     {
         for(int j = 0; j < 3; j++)
@@ -125,6 +126,21 @@ void computer()
             }
         }
     }
+
+    // Check which move can make a win
+    for(int i = 0; i < moves_left; i++)
+    {
+	board[row[i]][col[i]] = cur_player;
+	if(check_win())
+	{
+		won = 1;
+		moves_left--;
+		return;
+	}
+	board[row[i]][col[i]] = ' ';
+    }
+
+    // If no move can make a win, pick a random one
     random = rand() % moves_left;
     board[row[random]][col[random]] = cur_player;
     moves_left--;
@@ -134,17 +150,27 @@ int check_win()
 {
     // CHECK ROWS
     for(int i = 0; i < 3; i++)
+    {
         if((board[i][0] != ' ') && (board[i][0] == board[i][1]) && (board[i][1] == board[i][2]))
+	{
             return 1;
+	}
+    }
             
     // CHECK COLUMNS
     for(int i = 0; i < 3; i++)
+    {
         if((board[0][i] != ' ') && (board[0][i] == board[1][i]) && (board[1][i] == board[2][i]))
+	{
             return 1;
+	}
+    }
             
     // CHECK DIAGONALS
     if( ((board[0][0] != ' ') && (board[0][0] == board[1][1]) && (board[1][1] == board[2][2])) || ((board[0][2] != ' ') && (board[0][2] == board[1][1]) && (board[1][1] == board[2][0])) )
+    {
         return 1;
+    }
         
     return 0;
 }
@@ -152,7 +178,9 @@ int check_win()
 int check_draw()
 {
     if(moves_left == 0)
-        return 1;
+    {
+	    return 1;
+    }
 
     return 0;
 }
