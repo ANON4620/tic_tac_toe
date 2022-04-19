@@ -2,43 +2,47 @@
 #include <stdlib.h>
 #include <time.h>
 
-char board[3][3];
+char board[3][3] = {
+	{'1', '2', '3'},
+	{'4', '5', '6'},
+	{'7', '8', '9'}
+};
 char cur_player = 'X';
 int moves_left = 9;
 
 int main()
 {
-    void set_up_board();
-    void draw(int);
+    void clear_board();
+    void draw();
     void player();
     void computer();
     int check_win();
     int check_draw();
    
-    char temp;
+    char next_player;
 
     initscr();
     noecho();
     curs_set(0);
     srand(time(NULL));
-    set_up_board();
-    draw(1);
+    draw();
+    clear_board();
     
     while(1)
     {
         if(cur_player == 'X')
 	{
         	player();
-		temp = 'O';
+		next_player = 'O';
 	}
 	else
 	{
 		computer();
-		temp = 'X';
+		next_player = 'X';
 	}
 
 	clear();
-	draw(0);
+	draw();
 
         if(check_win())
         {
@@ -51,7 +55,7 @@ int main()
             break;
         }
 
-	cur_player = temp;
+	cur_player = next_player;
     }
 
     addstr("[Press any key to quit]");
@@ -62,43 +66,26 @@ int main()
     return 0;
 }
 
-void set_up_board()
+void clear_board()
 {
     for(int i = 0; i < 3; i++)
         for(int j = 0; j < 3; j++)
             board[i][j] = ' ';
 }
 
-void draw(int init)
+void draw()
 {
-    if(init)
-    {
-    	addstr("     |     |     \n");
-	addstr("  1  |  2  |  3  \n");
-    	addstr("     |     |     \n");
-	addstr("-----------------\n");
-	addstr("     |     |     \tPlayer - X\n");
-	addstr("  4  |  5  |  6  \tComputer - O\n");
-    	addstr("     |     |     \n");
-    	addstr("-----------------\n");
-    	addstr("     |     |     \n");
-    	addstr("  7  |  8  |  9  \n");
-	addstr("     |     |     \n\n");
-    }
-    else
-    {
-    	addstr("     |     |     \n");
-    	printw("  %c  |  %c  |  %c  \n", board[0][0], board[0][1], board[0][2]);
-    	addstr("     |     |     \n");
-    	addstr("-----------------\n");
-    	addstr("     |     |     \tPlayer - X\n");
-    	printw("  %c  |  %c  |  %c  \tComputer - O\n", board[1][0], board[1][1], board[1][2]);
-    	addstr("     |     |     \n");
-    	addstr("-----------------\n");
-    	addstr("     |     |     \n");
-    	printw("  %c  |  %c  |  %c  \n", board[2][0], board[2][1], board[2][2]);
-    	addstr("     |     |     \n\n");
-    }
+    addstr("     |     |     \n");
+    printw("  %c  |  %c  |  %c  \n", board[0][0], board[0][1], board[0][2]);
+    addstr("     |     |     \n");
+    addstr("-----------------\n");
+    addstr("     |     |     \tPlayer - X\n");
+    printw("  %c  |  %c  |  %c  \tComputer - O\n", board[1][0], board[1][1], board[1][2]);
+    addstr("     |     |     \n");
+    addstr("-----------------\n");
+    addstr("     |     |     \n");
+    printw("  %c  |  %c  |  %c  \n", board[2][0], board[2][1], board[2][2]);	
+    addstr("     |     |     \n\n");
 
     refresh();
 }
@@ -107,16 +94,18 @@ void player()
 {
     int move, row, col;
 
-    do
+    while(1)
     {
     	move = getch() - '1';
     	row = move / 3;
     	col = move % 3;
 
-    } while(board[row][col] != ' ');
+	if(move >= 0 && move <= 8 && board[row][col] == ' ')
+		break;
+    }
 
     board[row][col] = cur_player;
-    --moves_left;
+    moves_left--;
 }
 
 void computer()
@@ -132,29 +121,29 @@ void computer()
             {
                 row[k] = i;
                 col[k] = j;
-                ++k;
+                k++;
             }
         }
     }
     random = rand() % moves_left;
     board[row[random]][col[random]] = cur_player;
-    --moves_left;
+    moves_left--;
 }
 
 int check_win()
 {
     // CHECK ROWS
     for(int i = 0; i < 3; i++)
-        if((board[i][0] == board[i][1]) && (board[i][1] == board[i][2]) && (board[i][0] != ' '))
+        if((board[i][0] != ' ') && (board[i][0] == board[i][1]) && (board[i][1] == board[i][2]))
             return 1;
             
     // CHECK COLUMNS
     for(int i = 0; i < 3; i++)
-        if((board[0][i] == board[1][i]) && (board[1][i] == board[2][i]) && (board[0][i] != ' '))
+        if((board[0][i] != ' ') && (board[0][i] == board[1][i]) && (board[1][i] == board[2][i]))
             return 1;
             
     // CHECK DIAGONALS
-    if( ((board[0][0] == board[1][1]) && (board[1][1] == board[2][2]) && (board[0][0] != ' ')) || ((board[0][2] == board[1][1]) && (board[1][1] == board[2][0]) && (board[0][2] != ' ')) )
+    if( ((board[0][0] != ' ') && (board[0][0] == board[1][1]) && (board[1][1] == board[2][2])) || ((board[0][2] != ' ') && (board[0][2] == board[1][1]) && (board[1][1] == board[2][0])) )
         return 1;
         
     return 0;
