@@ -40,6 +40,7 @@ int main()
 		computer();
 		next_player = 'X';
 	}
+	moves_left--;
 
 	clear();
 	draw();
@@ -105,7 +106,6 @@ void player()
     }
 
     board[row][col] = cur_player;
-    moves_left--;
 }
 
 void computer()
@@ -134,16 +134,26 @@ void computer()
 	if(check_win())
 	{
 		won = 1;
-		moves_left--;
 		return;
 	}
 	board[row[i]][col[i]] = ' ';
     }
 
-    // If no move can make a win, pick a random one
+    // If no move can make a win, check if you can block the player
+    for(int i = 0; i < moves_left; i++)
+    {
+	    board[row[i]][col[i]] = 'X';
+	    if(check_win())
+	    {
+		    board[row[i]][col[i]] = cur_player;
+		    return;
+	    }
+	    board[row[i]][col[i]] = ' ';
+    }
+
+    // If no move can make a win or a block, pick a random one
     random = rand() % moves_left;
     board[row[random]][col[random]] = cur_player;
-    moves_left--;
 }
 
 int check_win()
